@@ -14,7 +14,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://quotex-blond.vercel.app"], 
+    origin: ["http://localhost:3000", "https://quotex-blond.vercel.app","https://www.fintextrading.com"], 
     credentials: true,
   })
 );
