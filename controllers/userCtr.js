@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const isProduction = process.env.NODE_ENV === "production";
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
@@ -34,8 +35,8 @@ const registerUser = asyncHandler(async (req, res) => {
     httpOnly: true,
     //expires: new Date(Date.now() + 1000 * 86400),// 1 day
     expires: new Date(Date.now() + 1000 * 3600), //1 hr
-    sameSite: "none",
-    secure: true,
+      sameSite: isProduction ? "none" : "lax",
+  secure: isProduction,
   });
 
   if (user) {
@@ -97,8 +98,8 @@ const loginUser = asyncHandler(async (req, res) => {
     path: "/",
     httpOnly: true,
     expires: new Date(Date.now() + 1000 * 86400), // 1 day
-    sameSite: "none",
-    secure: true,
+      sameSite: isProduction ? "none" : "lax",
+  secure: isProduction,
   });
 
   if (user && passwordIsCorrrect) {
@@ -115,8 +116,8 @@ const logoutUser = asyncHandler(async (req, res) => {
     path: "/",
     httpOnly: true,
     expires: new Date(0),
-    sameSite: "none",
-    secure: true,
+      sameSite: isProduction ? "none" : "lax",
+  secure: isProduction,
   });
 
   return res.status(200).json({ message: "Logged out successfully" });
